@@ -261,10 +261,24 @@ COPY INTO garden_plants.veggies.vegetable_details_plant_height
     FILE_FORMAT = (FORMAT_NAME = 'COMMASEP_DBLQUOT_ONEHEADROW')
     VALIDATION_MODE = RETURN_5_ROWS;
 
+
+
 COPY INTO garden_plants.veggies.vegetable_details_plant_height
     FROM @util_db.public.like_a_window_into_an_s3_bucket
     FILES = ('veg_plant_height.csv')
     FILE_FORMAT = (FORMAT_NAME = 'COMMASEP_DBLQUOT_ONEHEADROW');
+
+###In place of the above copy into code use only 
+
+COPY INTO garden_plants.veggies.vegetable_details_plant_height
+    FROM @util_db.public.my_internal_stage
+    FILES = ('veg_plant_height.csv')
+    FILE_FORMAT = (
+        FORMAT_NAME = 'garden_plants.veggies.COMMASEP_DBLQUOT_ONEHEADROW'
+        FIELD_DELIMITER = ',' 
+        SKIP_HEADER = 1
+        ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE -- Adds a safety net
+    );	
 
     
 USE DATABASE util_db;
